@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -80,11 +81,17 @@ public class ShopDetail extends ActionBarActivity {
         String shop_desc_brief = intent.getStringExtra("shop_desc_brief");
         String shop_desc = intent.getStringExtra("shop_desc");
         String shopID = intent.getStringExtra("shop_id");
+        String item_name= intent.getStringExtra("item_name");;
         float score = intent.getFloatExtra("score", 0.0f);
         shop_latitude = intent.getDoubleExtra("shop_latitude",0);
         shop_longitude = intent.getDoubleExtra("shop_longitude",0);
         current_latitude = intent.getDoubleExtra("current_latitude",999);
         current_longitude = intent.getDoubleExtra("current_longitude",999);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(item_name);
 
         LOAD_LINK = URL_LINK_DETAIL + shopID;
         Log.d(TAG, LOAD_LINK);
@@ -125,6 +132,18 @@ public class ShopDetail extends ActionBarActivity {
                 startActivity(m);
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // app icon in action bar clicked; goto parent activity.
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     //Inner Class

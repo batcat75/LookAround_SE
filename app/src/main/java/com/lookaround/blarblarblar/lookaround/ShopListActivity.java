@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -78,11 +79,16 @@ public class ShopListActivity extends ActionBarActivity {
     Location currentLocation;
     double currentlatitude = 999;
     double currentlongitude = 999;
+    String item_name_bar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop_list);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         /*get Intent item_id */
         String item_id = getIntent().getStringExtra("item_id");
@@ -92,6 +98,8 @@ public class ShopListActivity extends ActionBarActivity {
 
         currentlatitude = getIntent().getDoubleExtra("current_latitude",999);
         currentlongitude = getIntent().getDoubleExtra("current_longitude",999);
+        item_name_bar = getIntent().getStringExtra("item_name");
+        actionBar.setTitle(item_name_bar);
 
         //set activity
         activity = this;
@@ -130,6 +138,7 @@ public class ShopListActivity extends ActionBarActivity {
 
                 Intent i = new Intent(getApplicationContext(), ShopDetail.class);
                 i.putExtra("shop_id", shop_id[(int)position]);
+                i.putExtra("item_name", item_name_bar);
                 i.putExtra("shop_name", shop_name[(int)position]);
                 i.putExtra("shop_desc_brief", shop_brief[(int)position]);
                 i.putExtra("shop_desc", shop_desc[(int)position]);
@@ -146,25 +155,15 @@ public class ShopListActivity extends ActionBarActivity {
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_shop_list, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // app icon in action bar clicked; goto parent activity.
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     //Inner Class

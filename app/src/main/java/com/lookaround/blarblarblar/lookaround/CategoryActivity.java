@@ -36,7 +36,7 @@ public class CategoryActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ItemListActivity.class);
-                intent.putExtra("item_type", "foodandgift");
+                intent.putExtra("item_type", "1");
                 intent.putExtra("latitude_value", latitude);
                 intent.putExtra("longitude_value", longitude);
                 startActivity(intent);
@@ -48,7 +48,7 @@ public class CategoryActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ItemListActivity.class);
-                intent.putExtra("item_type", "common_use");
+                intent.putExtra("item_type", "3");
                 intent.putExtra("latitude_value", latitude);
                 intent.putExtra("longitude_value", longitude);
                 startActivity(intent);

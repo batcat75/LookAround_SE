@@ -116,12 +116,12 @@ public class ItemListActivity extends ActionBarActivity {
         final String item_type = getIntent().getStringExtra("item_type");
 
         //set type of items for data query
-        LOAD_LINK = URL_LINK + "?item_type="+item_type;
+        LOAD_LINK = URL_LINK + "?type_id="+item_type;
         Log.d(TAG, LOAD_LINK);
 
-        if(item_type.equals("foodandgift")) {
+        if(item_type.equals("1")) {
             actionBar.setTitle("เลือกชนิดของกิน");
-        }else if(item_type.equals("common_use")){
+        }else if(item_type.equals("3")){
             actionBar.setTitle("เลือกชนิดของฝาก");
         }else{
             actionBar.setTitle("เลือกสื่งที่สนใจ");
@@ -146,6 +146,7 @@ public class ItemListActivity extends ActionBarActivity {
 
                 Intent i = new Intent(getApplicationContext(), ShopListActivity.class);
                 i.putExtra("item_id", item_id[(int) id]);
+                i.putExtra("item_name", title[(int) id]);
                 i.putExtra("current_latitude", currentlatitude);
                 i.putExtra("current_longitude", currentlongitude);
 

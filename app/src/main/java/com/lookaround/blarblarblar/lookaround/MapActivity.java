@@ -1,5 +1,6 @@
 package com.lookaround.blarblarblar.lookaround;
 
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -35,6 +36,11 @@ public class MapActivity extends ActionBarActivity {
         current_latitude = getIntent().getDoubleExtra("current_latitude", 0);
         current_longitude = getIntent().getDoubleExtra("current_longitude", 0);
 
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(shop_name);
+
         // Google map
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL );
@@ -48,4 +54,15 @@ public class MapActivity extends ActionBarActivity {
                 .fromResource(R.drawable.manhere)).title("คุณอยู่ที่นี่"));
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // app icon in action bar clicked; goto parent activity.
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }
