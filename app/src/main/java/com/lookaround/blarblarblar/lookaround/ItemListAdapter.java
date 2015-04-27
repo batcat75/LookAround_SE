@@ -40,7 +40,6 @@ public class ItemListAdapter extends ArrayAdapter<String> {
         ImageView imageView = (ImageView)rowView.findViewById(R.id.icon);
 
         tvItemName.setText(title[position]);
-
         String imageUri = URL_LINK + "&id=" + item_id[position];
         Picasso.with(context).load(imageUri).into(imageView);
 

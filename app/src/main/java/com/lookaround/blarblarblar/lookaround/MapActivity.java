@@ -8,26 +8,44 @@ import android.view.MenuItem;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 
 public class MapActivity extends ActionBarActivity {
 
     GoogleMap map;
+    double shop_latitude;
+    double shop_longitude;
+    double current_latitude;
+    double current_longitude;
+    String shop_name;
+    Marker currentMarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        shop_latitude = getIntent().getDoubleExtra("shop_latitude",0);
+        shop_longitude = getIntent().getDoubleExtra("shop_longitude", 0);
+        shop_name = getIntent().getStringExtra("shop_name");
+        current_latitude = getIntent().getDoubleExtra("current_latitude", 0);
+        current_longitude = getIntent().getDoubleExtra("current_longitude", 0);
+
         // Google map
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL );
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                new LatLng(16.002812, 100.221808), 15));
-        LatLng latLng = new LatLng(16.002812, 100.221808);
-        map.addMarker(new MarkerOptions().position(latLng).title("Home"));
+                new LatLng(shop_latitude, shop_longitude), 15));
+        LatLng latLng = new LatLng(shop_latitude, shop_longitude);
+        map.addMarker(new MarkerOptions().position(latLng).title(shop_name));
+
+        latLng = new LatLng(current_latitude, current_longitude);
+        currentMarker = map.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory
+                .fromResource(R.drawable.manhere)).title("คุณอยู่ที่นี่"));
     }
 
 }

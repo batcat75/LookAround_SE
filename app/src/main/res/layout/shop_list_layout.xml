@@ -7,11 +7,13 @@
         android:layout_height="100dp"
         android:id="@+id/icon"
         android:src="@mipmap/ic_launcher"
-        android:layout_margin="5dp" />
+        android:layout_margin="5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="10dp" />
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content">
 
         <TextView
@@ -21,18 +23,31 @@
             android:id="@+id/txtTitle"
             android:textColor="#ff5f12ff"
             android:textSize="20sp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Score"
-            android:id="@+id/txtScore"
-            android:layout_margin="5dp"
-            android:textSize="16sp" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:id="@+id/txtDistance"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="20dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtScore"
+                android:layout_margin="5dp"
+                android:textSize="16sp" />
+        </LinearLayout>
 
     </LinearLayout>
 

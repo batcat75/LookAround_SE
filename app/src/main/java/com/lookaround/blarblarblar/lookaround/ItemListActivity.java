@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -76,12 +77,11 @@ public class ItemListActivity extends ActionBarActivity {
 
     ListView lv;
     // find location + measure distance
-    GoogleApiClient mLocationClient;
+    //GoogleApiClient mLocationClient;
     TextView textView1;
-    double latitude = 999;
-    double longitude = 999;
-    double[] results_distance = new double[1];
-    Location myLocation;
+    double currentlatitude = 999;
+    double currentlongitude = 999;
+    //double[] results_distance = new double[1];
     ProgressDialog dialog;
     Location currentLocation;
     //--------------------------------------
@@ -90,8 +90,13 @@ public class ItemListActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_list);
 
-        latitude = getIntent().getDoubleExtra("latitude_value",999);
-        longitude = getIntent().getDoubleExtra("longitude_value",999);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+
+        currentlatitude = getIntent().getDoubleExtra("latitude_value",999);
+        currentlongitude = getIntent().getDoubleExtra("longitude_value",999);
 
         activity = this;
 
@@ -114,7 +119,13 @@ public class ItemListActivity extends ActionBarActivity {
         LOAD_LINK = URL_LINK + "?item_type="+item_type;
         Log.d(TAG, LOAD_LINK);
 
-
+        if(item_type.equals("foodandgift")) {
+            actionBar.setTitle("เลือกชนิดของกิน");
+        }else if(item_type.equals("common_use")){
+            actionBar.setTitle("เลือกชนิดของฝาก");
+        }else{
+            actionBar.setTitle("เลือกสื่งที่สนใจ");
+        }
 
         // Hashmap for ListView
         shopList = new ArrayList<HashMap<String, String>>();
@@ -135,6 +146,8 @@ public class ItemListActivity extends ActionBarActivity {
 
                 Intent i = new Intent(getApplicationContext(), ShopListActivity.class);
                 i.putExtra("item_id", item_id[(int) id]);
+                i.putExtra("current_latitude", currentlatitude);
+                i.putExtra("current_longitude", currentlongitude);
 
                 startActivity(i);
             }
@@ -143,7 +156,7 @@ public class ItemListActivity extends ActionBarActivity {
         // Find location --------------------
         textView1 = (TextView) findViewById(R.id.textView1);
 
-        //new find solution
+        //new find location solution
         FindLocation();
 
         /*
@@ -167,29 +180,17 @@ public class ItemListActivity extends ActionBarActivity {
 
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_item_list, menu);
-        return true;
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // app icon in action bar clicked; goto parent activity.
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
-
     //Inner Class
 
     /**
@@ -341,8 +342,8 @@ public class ItemListActivity extends ActionBarActivity {
 
     void updateLocation(Location location) {
         currentLocation = location;
-        latitude = currentLocation.getLatitude();
-        longitude = currentLocation.getLongitude();
+        currentlatitude = currentLocation.getLatitude();
+        currentlongitude = currentLocation.getLongitude();
         //dialog.dismiss();
         //textView1.setText(String.valueOf(latitude) + "\n" + String.valueOf(longitude));
 

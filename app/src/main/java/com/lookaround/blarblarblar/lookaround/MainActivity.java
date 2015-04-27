@@ -1,8 +1,10 @@
 package com.lookaround.blarblarblar.lookaround;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.location.LocationManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -20,13 +22,14 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 
-public class MainActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends ActionBarActivity {
     // find location + measure distance
     GoogleApiClient mLocationClient;
     double latitude = 999.0;
     double longitude = 999.0;
     int target = 0;
     ProgressDialog dialog;
+    Location currentLocation;
     //TextView textView1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,80 +88,59 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
         });
 
         // Find location --------------------
-        //textView1 = (TextView) findViewById(R.id.textView1);
-        boolean result = isServicesAvailable();
-        result = isServicesAvailable();
-        // Check Google api in phone
-        if (result) {
-            mLocationClient = new GoogleApiClient.Builder(this)
-                    .addApi(LocationServices.API)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .build();
-        } else {
-            finish();
-        }
+        FindLocation();
     }
 
 // Location Provider ----------------------------------------------------
+public void FindLocation() {
+    LocationManager locationManager = (LocationManager) this
+            .getSystemService(Context.LOCATION_SERVICE);
 
-    protected void onStart() {
-        super.onStart();
-        mLocationClient.connect();
-    }
-
-    protected void onStop() {
-        super.onStop();
-        mLocationClient.disconnect();
-    }
-
-    public boolean isServicesAvailable() {
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-        return (resultCode == ConnectionResult.SUCCESS);
-    }
-
-
-    // Find Location Address
-
-    private LocationListener locationListener = new LocationListener() {
+    android.location.LocationListener locationListener = new android.location.LocationListener() {
         public void onLocationChanged(Location location) {
-            /*textView1.setText("Provider : " + location.getProvider() + "\n"
-                    + "Latitude : " + location.getLatitude() + "\n"
-                    + "Longitude : " + location.getLongitude() + "\n");*/
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
-            if(target!=0){
-                dialog.dismiss();
-                goTo();
-            }
-            //textView1.setText("la"+latitude+ "\nlong:"+longitude);
+            updateLocation(location);
+/*
+                Toast.makeText(
+                        testLocation.this,
+                        String.valueOf(currentLatitude) + "\n"
+                                + String.valueOf(currentLongitude), Toast.LENGTH_SHORT)
+                        .show();*/
+
+        }
+
+        public void onStatusChanged(String provider, int status,
+                                    Bundle extras) {
+        }
+
+        public void onProviderEnabled(String provider) {
+        }
+
+        public void onProviderDisabled(String provider) {
         }
     };
-    public void onConnected(Bundle bundle) {
-        //Toast.makeText(ItemListActivity.this, "Services connected", Toast.LENGTH_SHORT).show();
+    locationManager.requestLocationUpdates(
+            LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
 
-        LocationRequest mRequest = new LocationRequest()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(5000).setFastestInterval(10);
+}
 
-        LocationServices.FusedLocationApi.getLastLocation(mLocationClient);
-        LocationServices.FusedLocationApi.requestLocationUpdates(mLocationClient,mRequest,locationListener);
+
+    void updateLocation(Location location) {
+        currentLocation = location;
+        latitude = currentLocation.getLatitude();
+        longitude = currentLocation.getLongitude();
+
+        if(target!=0){
+            dialog.dismiss();
+            goTo();
+        }
+        //textView1.setText(String.valueOf(currentLatitude) + "\n"+ String.valueOf(currentLongitude));
+
     }
 
-    public void onDisconnected() {
-        Toast.makeText(MainActivity.this, "Services disconnected", Toast.LENGTH_SHORT).show();
-    }
-
-    public void onConnectionSuspended(int i) {
-    }
-
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        Toast.makeText(MainActivity.this, "Services connection failed", Toast.LENGTH_SHORT).show();
-    }
     // End Location Provider ----------------------------------------------------
 
     public void showWait(){
-        dialog = ProgressDialog.show(this, "Loading", "Please wait...", true);
+        dialog = ProgressDialog.show(this, "Find your location", "Please wait ...\nMake sure you open GPS", true);
     }
 
     public void goTo(){
@@ -175,7 +157,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
             startActivity(c);
             target=0;
         }else if(target==3){
-            Intent c = new Intent(getApplicationContext(), CategoryActivity.class);
+            Intent c = new Intent(getApplicationContext(), ShopDetail.class);
             c.putExtra("latitude_value", latitude);
             c.putExtra("longitude_value", longitude);
             startActivity(c);

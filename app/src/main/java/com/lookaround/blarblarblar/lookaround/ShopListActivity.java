@@ -2,7 +2,10 @@ package com.lookaround.blarblarblar.lookaround;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -56,6 +59,8 @@ public class ShopListActivity extends ActionBarActivity {
     private static final String TAG_SHOP_DESC = "shop_desc";
     private static final String TAG_IMAGE = "image_id";
     private static final String TAG_SCORE = "score";
+    private static final String TAG_LATITUDE = "latitude";
+    private static final String TAG_LONGITUDE = "longitude";
 
     private final String TAG = "ShopListActivity";
 
@@ -65,8 +70,14 @@ public class ShopListActivity extends ActionBarActivity {
     private String[] shop_desc;
     private int[] imgID;
     private float[] score;
+    private double[] shop_latitude;
+    private double[] shop_longitude;
 
     ListView lv;
+
+    Location currentLocation;
+    double currentlatitude = 999;
+    double currentlongitude = 999;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +89,9 @@ public class ShopListActivity extends ActionBarActivity {
         LOAD_LINK = URL_LINK + "?item_id=" + item_id;
 
         Log.d(TAG, LOAD_LINK);
+
+        currentlatitude = getIntent().getDoubleExtra("current_latitude",999);
+        currentlongitude = getIntent().getDoubleExtra("current_longitude",999);
 
         //set activity
         activity = this;
@@ -101,6 +115,8 @@ public class ShopListActivity extends ActionBarActivity {
         // Loading Items JSON in Background Thread
         new LoadShops().execute();
 
+        //new find location solution
+        FindLocation();
 
         lv = (ListView) findViewById(R.id.listView2);
         /**
@@ -112,13 +128,17 @@ public class ShopListActivity extends ActionBarActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d(TAG, "position : " + position + " , id : " + id);
 
-                Intent i = new Intent(getApplicationContext(), ShopActivity.class);
+                Intent i = new Intent(getApplicationContext(), ShopDetail.class);
                 i.putExtra("shop_id", shop_id[(int)position]);
                 i.putExtra("shop_name", shop_name[(int)position]);
                 i.putExtra("shop_desc_brief", shop_brief[(int)position]);
                 i.putExtra("shop_desc", shop_desc[(int)position]);
                 i.putExtra("imgID", imgID[(int)position]);
                 i.putExtra("score", score[(int)position]);
+                i.putExtra("shop_latitude", shop_latitude[(int)position]);
+                i.putExtra("shop_longitude", shop_longitude[(int)position]);
+                i.putExtra("current_latitude", currentlatitude);
+                i.putExtra("current_longitude", currentlongitude);
                 startActivity(i);
             }
         });
@@ -197,6 +217,8 @@ public class ShopListActivity extends ActionBarActivity {
                     shop_desc = new String[shops_json_array.length()];
                     imgID = new int[shops_json_array.length()];
                     score = new float[shops_json_array.length()];
+                    shop_latitude = new double[shops_json_array.length()];
+                    shop_longitude = new double[shops_json_array.length()];
 
                     // looping through All albums
                     for (int i = 0; i < shops_json_array.length(); i++) {
@@ -208,6 +230,8 @@ public class ShopListActivity extends ActionBarActivity {
                         String name = c.getString(TAG_SHOP_NAME);
                         String brief = c.getString(TAG_SHOP_DESC_BRIEF);
                         String desc = c.getString(TAG_SHOP_DESC);
+                        String shop_lati = c.getString(TAG_LATITUDE);
+                        String shop_longi = c.getString(TAG_LONGITUDE);
 
                         Log.d(TAG, "id:name = " + id + " : " + name);
 
@@ -221,6 +245,8 @@ public class ShopListActivity extends ActionBarActivity {
                         map.put(TAG_SHOP_DESC, desc);
                         map.put(TAG_IMAGE, String.valueOf(R.drawable.icon));
                         map.put(TAG_SCORE, String.valueOf(5.0f));
+                        map.put(TAG_LATITUDE, shop_lati);
+                        map.put(TAG_LONGITUDE, shop_longi);
 
                         // adding HashList to ArrayList
                         shopList.add(map);
@@ -260,13 +286,15 @@ public class ShopListActivity extends ActionBarActivity {
                         shop_desc[i] = map.get(TAG_SHOP_DESC);
                         imgID[i] = Integer.parseInt(map.get(TAG_IMAGE));
                         score[i] = Float.parseFloat(map.get(TAG_SCORE));
+                        shop_latitude[i] =  Double.parseDouble(map.get(TAG_LATITUDE));
+                        shop_longitude[i] =  Double.parseDouble(map.get(TAG_LONGITUDE));
 
                     }
 
                     /**
                      * Updating data into ListView
                      * */
-                    ShopListAdapter listAdap = new ShopListAdapter(activity, shop_id, shop_name, score);
+                    ShopListAdapter listAdap = new ShopListAdapter(activity, shop_id, shop_name, score,shop_latitude,shop_longitude,currentlatitude,currentlongitude);
 
                     // updating listview
                     lv.setAdapter(listAdap);
@@ -275,6 +303,48 @@ public class ShopListActivity extends ActionBarActivity {
             });
 
         }
+
+    }
+
+    // Find location -----------------------------------------------------------------------------------
+    public void FindLocation() {
+        LocationManager locationManager = (LocationManager) this
+                .getSystemService(Context.LOCATION_SERVICE);
+
+        android.location.LocationListener locationListener = new android.location.LocationListener() {
+            public void onLocationChanged(Location location) {
+                updateLocation(location);
+/*
+                Toast.makeText(
+                        testLocation.this,
+                        String.valueOf(currentLatitude) + "\n"
+                                + String.valueOf(currentLongitude), Toast.LENGTH_SHORT)
+                        .show();*/
+
+            }
+
+            public void onStatusChanged(String provider, int status,
+                                        Bundle extras) {
+            }
+
+            public void onProviderEnabled(String provider) {
+            }
+
+            public void onProviderDisabled(String provider) {
+            }
+        };
+        locationManager.requestLocationUpdates(
+                LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+
+    }
+
+
+    void updateLocation(Location location) {
+        currentLocation = location;
+        currentlatitude = currentLocation.getLatitude();
+        currentlongitude = currentLocation.getLongitude();
+        //dialog.dismiss();
+        //textView1.setText(String.valueOf(latitude) + "\n" + String.valueOf(longitude));
 
     }
 

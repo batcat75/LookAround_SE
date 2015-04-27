@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">LookAround</string>
+    <string name="app_name">Look Around</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -12,4 +12,5 @@
     <string name="title_activity_map">mapActivity</string>
     <string name="title_activity_test_scroll">testScroll</string>
     <string name="title_activity_test_location">testLocation</string>
+    <string name="title_activity_shop_detail">ShopDetail</string>
 </resources>

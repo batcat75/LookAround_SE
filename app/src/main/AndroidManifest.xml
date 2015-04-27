@@ -61,6 +61,10 @@
             android:name=".testLocation"
             android:label="@string/title_activity_test_location" >
         </activity>
+        <activity
+            android:name=".ShopDetail"
+            android:label="@string/title_activity_shop_detail" >
+        </activity>
     </application>
 
 </manifest>
