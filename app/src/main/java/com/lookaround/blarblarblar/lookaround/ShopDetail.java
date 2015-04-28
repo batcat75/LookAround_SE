@@ -62,7 +62,7 @@ public class ShopDetail extends ActionBarActivity {
     private Intent intent;
     private ImageView imgView;
     private TextView txtTitle, txtDesc,txtPhone,txtAddress,txtTime;
-    Activity context ;
+    Activity context;
 
     String LOAD_LINK;
 
@@ -101,7 +101,7 @@ public class ShopDetail extends ActionBarActivity {
         imgView = (ImageView)findViewById(R.id.imageView_cover);
         //imgView.setImageResource(imgID);
         String imageUri = URL_LINK_COVER + "&id=" + shopID+"&use_for=cover";
-        Picasso.with(context).load(imageUri).resize(1080, 500).into(imgView);
+        Picasso.with(this).load(imageUri).resize(1080, 500).into(imgView);
 
         txtTitle = (TextView)findViewById(R.id.textView_name);
         txtTitle.setText(shop_name);

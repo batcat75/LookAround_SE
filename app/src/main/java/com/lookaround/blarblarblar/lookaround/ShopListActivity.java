@@ -79,6 +79,7 @@ public class ShopListActivity extends ActionBarActivity {
     Location currentLocation;
     double currentlatitude = 999;
     double currentlongitude = 999;
+    String near = "no";
     String item_name_bar;
 
     @Override
@@ -90,16 +91,29 @@ public class ShopListActivity extends ActionBarActivity {
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        /*get Intent item_id */
-        String item_id = getIntent().getStringExtra("item_id");
-        LOAD_LINK = URL_LINK + "?item_id=" + item_id;
-
-        Log.d(TAG, LOAD_LINK);
-
+        // Check use function near by or not use.
+        near = getIntent().getStringExtra("near");
         currentlatitude = getIntent().getDoubleExtra("current_latitude",999);
         currentlongitude = getIntent().getDoubleExtra("current_longitude",999);
-        item_name_bar = getIntent().getStringExtra("item_name");
-        actionBar.setTitle(item_name_bar);
+
+        /*get Intent item_id */
+        if(near.equals("yes")) {
+            actionBar.setTitle("ร้านค้าใกล้ตัว");
+            double max_lati=currentlatitude+0.05;
+            double min_lati=currentlatitude-0.05;
+            double max_longi=currentlongitude+0.05;
+            double min_longi=currentlongitude-0.05;
+            LOAD_LINK = "http://vps.bongtrop.com/blarblarblar/getShopNear.php?max_lati=" +max_lati+"&min_lati=" +min_lati+ "&max_longi="+max_longi+"&min_longi="+min_longi;
+        }else if(near.equals("suggest")) {
+            actionBar.setTitle("ร้านค้าแนะนำ");
+            LOAD_LINK = "http://vps.bongtrop.com/blarblarblar/getShopSuggest.php";
+        }else{
+            item_name_bar = getIntent().getStringExtra("item_name");
+            actionBar.setTitle(item_name_bar);
+            String item_id = getIntent().getStringExtra("item_id");
+            LOAD_LINK = URL_LINK + "?item_id=" + item_id;
+        }
+        Log.d(TAG, LOAD_LINK);
 
         //set activity
         activity = this;

@@ -118,7 +118,8 @@
                 android:orientation="horizontal"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="10dp"
+                android:paddingBottom="2dp">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -147,7 +148,8 @@
                     android:paddingLeft="10dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginBottom="3dp" />
+                    android:layout_marginBottom="3dp"
+                    android:paddingBottom="3dp" />
             </LinearLayout>
             <ImageView
                 android:id="@+id/imageViewStaticMap"

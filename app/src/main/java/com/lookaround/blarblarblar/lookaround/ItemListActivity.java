@@ -81,6 +81,7 @@ public class ItemListActivity extends ActionBarActivity {
     TextView textView1;
     double currentlatitude = 999;
     double currentlongitude = 999;
+    String near;
     //double[] results_distance = new double[1];
     ProgressDialog dialog;
     Location currentLocation;
@@ -97,6 +98,7 @@ public class ItemListActivity extends ActionBarActivity {
 
         currentlatitude = getIntent().getDoubleExtra("latitude_value",999);
         currentlongitude = getIntent().getDoubleExtra("longitude_value",999);
+        near = getIntent().getStringExtra("near");
 
         activity = this;
 
@@ -149,6 +151,7 @@ public class ItemListActivity extends ActionBarActivity {
                 i.putExtra("item_name", title[(int) id]);
                 i.putExtra("current_latitude", currentlatitude);
                 i.putExtra("current_longitude", currentlongitude);
+                i.putExtra("near", near);
 
                 startActivity(i);
             }

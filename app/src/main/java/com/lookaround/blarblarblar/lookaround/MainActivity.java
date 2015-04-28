@@ -7,6 +7,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,9 +45,10 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 if(longitude!= 999) {
-                    Intent c = new Intent(getApplicationContext(), CategoryActivity.class);
-                    c.putExtra("latitude_value", latitude);
-                    c.putExtra("longitude_value", longitude);
+                    Intent c = new Intent(getApplicationContext(), ShopListActivity.class);
+                    c.putExtra("current_latitude", latitude);
+                    c.putExtra("current_longitude", longitude);
+                    c.putExtra("near", "yes");
                     startActivity(c);
                 }else{
                     target = 1;
@@ -63,6 +65,7 @@ public class MainActivity extends ActionBarActivity {
                     Intent m = new Intent(getApplicationContext(), CategoryActivity.class);
                     m.putExtra("latitude_value", latitude);
                     m.putExtra("longitude_value", longitude);
+                    m.putExtra("near", "no");
                     startActivity(m);
                 }else{
                     target = 2;
@@ -76,12 +79,59 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 if(longitude!= 999) {
-                    Intent s = new Intent(getApplicationContext(), CategoryActivity.class);
-                    s.putExtra("latitude_value", latitude);
-                    s.putExtra("longitude_value", longitude);
+                    Intent s = new Intent(getApplicationContext(), ShopListActivity.class);
+                    s.putExtra("current_latitude", latitude);
+                    s.putExtra("current_longitude", longitude);
+                    s.putExtra("near", "suggest");
                     startActivity(s);
                 }else{
                     target = 3;
+                    showWait();
+                }
+            }
+        });
+
+        android.support.v7.widget.CardView card1 = (CardView)findViewById(R.id.card_view);
+        card1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(longitude!= 999) {
+                    Intent c = new Intent(getApplicationContext(), ShopDetail.class);
+                    c.putExtra("current_latitude", latitude);
+                    c.putExtra("current_longitude", longitude);
+                    c.putExtra("shop_name", "ศูนย์หัตกรรมบ่อสร้าง - ร่มกะดาษสา");
+                    c.putExtra("shop_desc_brief","ศูนย์ผลิตและจำหน่าย สินค้าหัตถกรรม ร่มบ่อสร้าง ร่มกระดาษสา");
+                    c.putExtra("shop_desc","ศูนย์ผลิตและจำหน่าย สินค้าหัตถกรรม ร่มบ่อสร้าง ร่มกระดาษสา");
+                    c.putExtra("shop_id","14");
+                    c.putExtra("item_name","ร่มบ่อสร้าง");
+                    c.putExtra("shop_latitude",18.7683055);
+                    c.putExtra("shop_longitude",99.0750274);
+                    startActivity(c);
+                }else{
+                    target = 4;
+                    showWait();
+                }
+            }
+        });
+
+        android.support.v7.widget.CardView card2 = (CardView)findViewById(R.id.card_view2);
+        card2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(longitude!= 999) {
+                    Intent c = new Intent(getApplicationContext(), ShopDetail.class);
+                    c.putExtra("current_latitude", latitude);
+                    c.putExtra("current_longitude", longitude);
+                    c.putExtra("shop_name", "แคบหมูน้องแอ้ ตลาดต้นพยอม");
+                    c.putExtra("shop_desc_brief","จำหน่าย ไส้อั่ว เเคบหมู น้ำพริกหนุ่ม เเหนมป้าย่น หมูยอ");
+                    c.putExtra("shop_desc","จำหน่าย ไส้อั่ว เเคบหมู น้ำพริกหนุ่ม เเหนมป้าย่น หมูยอ");
+                    c.putExtra("shop_id","8");
+                    c.putExtra("item_name","ร่มบ่อสร้าง");
+                    c.putExtra("shop_latitude",18.7896208);
+                    c.putExtra("shop_longitude",98.9613601);
+                    startActivity(c);
+                }else{
+                    target = 5;
                     showWait();
                 }
             }
@@ -145,21 +195,50 @@ public void FindLocation() {
 
     public void goTo(){
         if(target==1){
-            Intent c = new Intent(getApplicationContext(), CategoryActivity.class);
-            c.putExtra("latitude_value", latitude);
-            c.putExtra("longitude_value", longitude);
+            Intent c = new Intent(getApplicationContext(), ShopListActivity.class);
+            c.putExtra("current_latitude", latitude);
+            c.putExtra("current_longitude", longitude);
+            c.putExtra("near", "yes");
             startActivity(c);
             target=0;
         }else if(target==2){
             Intent c = new Intent(getApplicationContext(), CategoryActivity.class);
             c.putExtra("latitude_value", latitude);
             c.putExtra("longitude_value", longitude);
+            c.putExtra("near", "no");
             startActivity(c);
             target=0;
         }else if(target==3){
+            Intent c = new Intent(getApplicationContext(), CategoryActivity.class);
+            c.putExtra("current_latitude", latitude);
+            c.putExtra("current_longitude", longitude);
+            c.putExtra("near", "suggest");
+            startActivity(c);
+            target=0;
+        }else if(target==4){
             Intent c = new Intent(getApplicationContext(), ShopDetail.class);
-            c.putExtra("latitude_value", latitude);
-            c.putExtra("longitude_value", longitude);
+            c.putExtra("current_latitude", latitude);
+            c.putExtra("current_longitude", longitude);
+            c.putExtra("shop_name", "ศูนย์หัตกรรมบ่อสร้าง - ร่มกะดาษสา");
+            c.putExtra("shop_desc_brief","ศูนย์ผลิตและจำหน่าย สินค้าหัตถกรรม ร่มบ่อสร้าง ร่มกระดาษสา");
+            c.putExtra("shop_desc","ศูนย์ผลิตและจำหน่าย สินค้าหัตถกรรม ร่มบ่อสร้าง ร่มกระดาษสา");
+            c.putExtra("shop_id","14");
+            c.putExtra("item_name","ร่มบ่อสร้าง");
+            c.putExtra("shop_latitude",18.7683055);
+            c.putExtra("shop_longitude",99.0750274);
+            startActivity(c);
+            target=0;
+        }else if(target==5){
+            Intent c = new Intent(getApplicationContext(), ShopDetail.class);
+            c.putExtra("current_latitude", latitude);
+            c.putExtra("current_longitude", longitude);
+            c.putExtra("shop_name", "แคบหมูน้องแอ้ ตลาดต้นพยอม");
+            c.putExtra("shop_desc_brief","จำหน่าย ไส้อั่ว เเคบหมู น้ำพริกหนุ่ม เเหนมป้าย่น หมูยอ");
+            c.putExtra("shop_desc","จำหน่าย ไส้อั่ว เเคบหมู น้ำพริกหนุ่ม เเหนมป้าย่น หมูยอ");
+            c.putExtra("shop_id","8");
+            c.putExtra("item_name","ร่มบ่อสร้าง");
+            c.putExtra("shop_latitude",18.7896208);
+            c.putExtra("shop_longitude",98.9613601);
             startActivity(c);
             target=0;
         }

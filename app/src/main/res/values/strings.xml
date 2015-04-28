@@ -13,4 +13,5 @@
     <string name="title_activity_test_scroll">testScroll</string>
     <string name="title_activity_test_location">testLocation</string>
     <string name="title_activity_shop_detail">ShopDetail</string>
+    <string name="title_activity_image_gallery_view">ImageGalleryView</string>
 </resources>
